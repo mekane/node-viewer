@@ -72,6 +72,34 @@ function showPage(req, res) {
   res.send(getPage(page));
 }
 
-function getPage(page) {
-  return `<html><h1>Page ${page}</h1><br><a href="/${files[page]}">${files[page]}</a></html>`; //TODO: obviously, don't allow injections this easily :-p
+function getPage(p) {
+  return pageHead(p) + pageBody(p) + pageEnd(p);
 }
+
+function pageHead(page) {
+  return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page ${page}</title>
+</head>`
+;
+}
+
+function pageBody(page) {
+  const image = files[page];
+
+  return `<body>
+  <h1>Page ${page}</h1>
+  <a href="/${image}">
+    <img src="/${image}">
+  </a>
+</body>
+`;
+}
+
+function pageEnd(page) {
+  return `</html>`;
+}
+
