@@ -58,7 +58,17 @@ function startAtPageZero(req, res) {
 
 function showPage(req, res) {
   console.log(`page requested`, req.params);
-  const page = req.params['p'];
+  const p = req.params['p'];
+
+  //validate page
+  const page = parseInt(p, 10);
+
+  if ( isNaN(page) || page < 0 || page >= files.length ) {
+    res.status(400);
+    res.send(`Invalid page number ${page}`);
+    return;
+  }
+
   res.send(getPage(page));
 }
 
