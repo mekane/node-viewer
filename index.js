@@ -1,5 +1,7 @@
 const fs = require('fs');
-//const path = require('path');
+const open = require('open');
+
+const port = 6969;
 
 const directory = getDirectory();
 console.log(`starting up in ${directory}`);
@@ -15,6 +17,7 @@ const maxPage = files.length - 1;
 
 startServer();
 
+open(`http://localhost:${port}/`, { app: ['chromium-browser', '--incognito', '--appgi'] });
 
 function getDirectory() {
     const cwd = process.cwd();
@@ -30,7 +33,6 @@ function getDirectory() {
 
 function startServer() {
     const express = require('express');
-    const port = 6969;
     const app = express();
     app.use(express.static(directory));
     app.get('/', startAtPageZero);
@@ -114,11 +116,11 @@ function pageBody(page) {
     let next = '';
 
     if (page > 0) {
-        prev = `<a class="link" style="left: 4px;" href="/${page-1}">Prev</a>`;
+        prev = `<a id="prev" class="link" style="left: 4px;" href="/${page - 1}">Prev</a>`;
     }
 
     if (page < maxPage) {
-        next = `<a class="link" style="right: 4px;" href="/${page+1}">Next</a>`;
+        next = `<a id="next" class="link" style="right: 4px;" href="/${page + 1}">Next</a>`;
     }
 
     return `<body style="background: rgb(44, 44, 44)">
@@ -128,6 +130,22 @@ ${next}
   <a href="/${page < maxPage ? page + 1 : 0}">
     <img style="display: block; margin: auto;" src="/${image}">
   </a>
+  <script>
+  document.body.addEventListener('keyup', onkeypress);
+
+  const next = document.getElementById('next');
+  const prev = document.getElementById('prev');
+  
+  function onkeypress(e) {
+    if (e.key === 'ArrowRight') {
+        next.click();
+    }
+    
+    if (e.key === 'ArrowLeft' && prev) {
+        prev.click();
+    }
+  }
+  </script>
 </body>
 `;
 }
@@ -135,4 +153,3 @@ ${next}
 function pageEnd(page) {
     return `</html>`;
 }
-
