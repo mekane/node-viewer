@@ -105,6 +105,14 @@ function pageHead(page) {
     position: absolute;
     top: 4px;
   }
+  
+  img.fit-height {
+    height: 100vh;
+  }
+  
+  img.fit-width {
+    width: 100vw;
+  }
 </style>
 </head>`;
 }
@@ -128,11 +136,12 @@ ${prev}
   <h1>Page ${page}</h1>
 ${next}
   <a href="/${page < maxPage ? page + 1 : 0}">
-    <img style="display: block; margin: auto;" src="/${image}">
+    <img id="image" style="display: block; margin: auto;" src="/${image}">
   </a>
   <script>
   document.body.addEventListener('keyup', onkeypress);
 
+  const img = document.getElementById('image');
   const next = document.getElementById('next');
   const prev = document.getElementById('prev');
   
@@ -144,6 +153,43 @@ ${next}
     if (e.key === 'ArrowLeft' && prev) {
         prev.click();
     }
+
+    if (e.key === '1') {
+        zoomHeight();
+    }
+    
+    if (e.key === '2') {
+        zoomDefault();
+    }
+
+    if (e.key === '3') {
+        zoomWidth();
+    }
+
+    if (e.key === 'z') {
+        toggleZoom();
+    }
+  }
+  
+  function zoomHeight() {
+      img.className = 'fit-height';
+  }
+  
+  function zoomDefault() {
+      img.className = '';      
+  }
+  
+  function zoomWidth() {
+      img.className = 'fit-width';
+  }
+  
+  function toggleZoom() {
+      if ( img.className === '' )
+          zoomWidth();
+      else if (img.className === 'fit-width')
+          zoomHeight();
+      else
+          zoomDefault();
   }
   </script>
 </body>
