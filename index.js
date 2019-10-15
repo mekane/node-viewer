@@ -40,7 +40,7 @@ function startServer() {
     app.listen(port, () => console.log(`Server listening on port ${port}!`));
 
     /*
-  var options = {
+    var options = {
     dotfiles: 'ignore',
     etag: false,
     extensions: ['htm', 'html'],
@@ -60,7 +60,6 @@ function startAtPageZero(req, res) {
     res.redirect(301, '/0');
 }
 
-//TODO: make current zoom level sticky (add as param to next, and embed class for z query param in image class on render)
 function showPage(req, res) {
     console.log(`page requested`, req.params);
     const p = req.params['p'];
@@ -192,17 +191,17 @@ ${next}
   
   function zoomHeight() {
       img.className = 'fit-height';
-      //add ?z=h to links
+      setZoomParam('h');
   }
   
   function zoomDefault() {
       img.className = '';      
-      //remove z from links
+      setZoomParam();
   }
   
   function zoomWidth() {
       img.className = 'fit-width';
-    //add ?z=w to links
+      setZoomParam('w');
   }
   
   function toggleZoom() {
@@ -212,6 +211,27 @@ ${next}
           zoomHeight();
       else
           zoomDefault();
+  }
+
+  const linkIds = ['imageLink', 'next', 'prev'];
+
+  function setZoomParam(newVal) {
+      if ( newVal === 'h' || newVal === 'w') {
+        linkIds.forEach(linkId => {
+            const link = document.getElementById(linkId);
+            if ( link.href.includes('?z=')) {
+                link.href = link.href.slice(0, link.href.lastIndexOf('?')) + '?z=' + newVal; 
+            }
+            else
+                link.href += '?z='+newVal;
+        });
+      }
+      else {
+          linkIds.forEach(linkId => {
+              const link = document.getElementById(linkId);
+              link.href = link.href.slice(0, link.href.lastIndexOf('?'));
+          });
+      }
   }
   </script>
 </body>
