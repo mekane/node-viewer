@@ -17,7 +17,7 @@ const maxPage = files.length - 1;
 
 startServer();
 
-open(`http://localhost:${port}/`, { app: ['chromium-browser', '--incognito', '--appgi'] });
+open(`http://localhost:${port}/`, { app: ['chromium-browser', '--incognito', '--appgi', '--start-fullscreen'] });
 
 function getDirectory() {
     const cwd = process.cwd();
@@ -101,9 +101,9 @@ function pageHead(page) {
   }
 
   h1 {
-  color: #ccc;
-    margin: 0 auto 2px;
-    text-align: center;
+    color: #aaa;
+    position: absolute;
+    top: 24px;
   }
 
   a.link {
